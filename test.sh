@@ -48,3 +48,7 @@ test_print8 () { # work in progress
   expected="65 0x41 A  67 0x43 C  "
   assertEquals "Output should contain default values when no flags are set with input-arg option" "$expected" "$output"
 }
+
+# work in progress
+# double trailing space issue unresolved,
+# if run with ./universe -s -x -d -r "0x41 0x43" it only displays the output for 0x41 not for both 0x41 0x43
