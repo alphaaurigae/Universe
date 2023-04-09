@@ -14,6 +14,89 @@ bool isHex(const std::string& input) {
     return input.substr(0, 2) == "0x" || input.substr(0, 2) == "0X";
 }
 
+void printUnicodeRange(const std::vector<std::string>& ranges, bool print_dec, bool print_hex, bool print_sym, bool newline, std::string& output) {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    for (const auto& range : ranges) {
+        std::vector<std::string> subranges;
+        std::istringstream iss(range);
+        std::string subrange;
+        while (std::getline(iss, subrange, ',')) {
+            subranges.push_back(subrange);
+        }
+        for (const auto& subrange : subranges) {
+            std::istringstream iss(subrange);
+            std::string start, end;
+            std::getline(iss, start, '-');
+            std::getline(iss, end);
+
+            int start_num = 0, end_num = 0;
+            if (isHex(start)) {
+                start_num = std::stoi(start, nullptr, 16);
+                end_num = end.empty() ? start_num : std::stoi(end, nullptr, 16);
+            } else if (!std::regex_match(start, std::regex("[0-9]+"))) {
+                std::cerr << "Error: Invalid input. The input with option -r should be hexadecimal values or code point values." << std::endl;
+                return;
+            } else {
+                start_num = std::stoi(start);
+                end_num = end.empty() ? start_num : std::stoi(end);
+            }
+
+            for (int char_num = start_num; char_num <= end_num; char_num++) {
+                if (print_dec) {
+                    output += std::to_string(char_num) + " ";
+                }
+                if (print_hex) {
+                    std::stringstream ss;
+                    ss << "0x" << std::hex << char_num << " ";
+                    output += ss.str();
+                }
+                if (print_sym) {
+                    // Create a wstring with a single Unicode character
+                    std::wstring wstr = { static_cast<wchar_t>(char_num) };
+                    // Convert the wstring to UTF-8
+                    std::string utf8_str = converter.to_bytes(wstr);
+                    // Print the UTF-8 string
+                    output += utf8_str + " ";
+                }
+                if (newline) {
+                    output += "\n";
+                }
+            }
+            if (!newline) {
+                output += "\n";
+            }
+        }
+    }
+}
+
+void printUnicodeString(const std::string& input, bool print_dec, bool print_hex, bool print_sym, bool newline, std::string& output) {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    std::wstring wstr = converter.from_bytes(input);
+    for (const auto& ch : wstr) {
+        int char_num = static_cast<int>(ch);
+        if (print_dec) {
+            output += std::to_string(char_num) + " ";
+        }
+        if (print_hex) {
+            std::stringstream ss;
+            ss << "0x" << std::hex << char_num << " ";
+            output += ss.str();
+        }
+        if (print_sym) {
+            // Convert the wstring to UTF-8
+            std::string utf8_str = converter.to_bytes(std::wstring(1, ch));
+            // Print the UTF-8 string
+            output += utf8_str + " ";
+        }
+        if (newline) {
+            output += "\n";
+        }
+    }
+    if (!newline) {
+        output += "\n";
+    }
+}
+
 void printHelpMenu() {
     std::cout << "Usage: ./universe [OPTIONS] -r range1 range2 ... OR -ia input\n\n"
               << "OPTIONS:\n"
@@ -39,92 +122,13 @@ void printHelpMenu() {
               << "If -ia option is used, the input will be treated as a string instead of Unicode ranges." << std::endl;
 }
 
-
-void printUnicode(const std::vector<std::string>& ranges, bool print_dec, bool print_hex, bool print_sym, bool newline) {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-    for (const auto& range : ranges) {
-        std::istringstream iss(range);
-        std::string start, end;
-        std::getline(iss, start, '-');
-        std::getline(iss, end);
-
-        int start_num = 0, end_num = 0;
-        if (isHex(start)) {
-            start_num = std::stoi(start, nullptr, 16);
-            end_num = end.empty() ? start_num : std::stoi(end, nullptr, 16);
-        } else if (!std::regex_match(start, std::regex("[0-9]+"))) {
-            std::cerr << "Error: Invalid input. The input with option -r should be hexadecimal values or code point values." << std::endl;
-            return;
-        } else {
-            start_num = std::stoi(start);
-            end_num = end.empty() ? start_num : std::stoi(end);
-        }
-
-        for (int char_num = start_num; char_num <= end_num; char_num++) {
-            if (print_dec) {
-                std::cout << std::dec << char_num << " ";
-            }
-            if (print_hex) {
-                std::cout << "0x" << std::hex << char_num << " ";
-            }
-            if (print_sym) {
-                // Create a wstring with a single Unicode character
-                std::wstring wstr = { static_cast<wchar_t>(char_num) };
-                // Convert the wstring to UTF-8
-                std::string utf8_str = converter.to_bytes(wstr);
-                // Print the UTF-8 string
-                std::cout << utf8_str << " ";
-            }
-            if (newline) {
-                std::cout << std::endl;
-            }
-        }
-        if (!newline) {
-            std::cout << std::endl;
-        }
-    }
-}
-
-void printUnicode(const std::string& input, bool print_dec, bool print_hex, bool print_sym, bool newline) {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-    std::wstring wstr = converter.from_bytes(input);
-    for (const auto& ch : wstr) {
-        int char_num = static_cast<int>(ch);
-        if (print_dec) {
-            std::cout << std::dec << char_num << " ";
-        }
-        if (print_hex) {
-            std::cout << "0x" << std::hex << char_num << " ";
-        }
-        if (print_sym) {
-            // Convert the wstring to UTF-8
-            std::string utf8_str = converter.to_bytes(std::wstring(1, ch));
-            // Print the UTF-8 string
-            std::cout << utf8_str << " ";
-        }
-        if (newline) {
-            std::cout << std::endl;
-        }
-    }
-    if (!newline) {
-        std::cout << std::endl;
-    }
-}
-
-int main(int argc, char* argv[]) {
-    std::vector<std::string> ranges;
-    std::string input;
-    int print_flags = 0;
-    bool newline = false;
-    bool is_range = false;
-    bool is_input = false;
-
+void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, int& print_flags, bool& newline, bool& is_range, bool& is_input) {
     // Parse command line arguments
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "-h" || arg == "--help") {
             printHelpMenu();
-            return 0;
+            exit(0);
         } else if (arg == "-r" || arg == "--range") {
             is_range = true;
             i++;
@@ -149,53 +153,83 @@ int main(int argc, char* argv[]) {
             }
         } else {
             std::cerr << "Error: Invalid argument: " << arg << std::endl;
-            return 1;
+            exit(1);
         }
     }
+}
 
-    bool print_numbers = print_flags & 1;
-    bool print_hex = print_flags & 2;
-    bool print_sym = print_flags & 4;
-
+void handleErrors(bool is_range, bool is_input, const std::vector<std::string>& ranges, const std::string& input, int print_flags) {
     if (is_range && is_input) {
         std::cerr << "Error: -r and -ia options are not compatible." << std::endl;
         printHelpMenu();
-        return 1;
+        exit(1);
     }
 
     if (!is_range && !is_input) {
         std::cerr << "Error: Either -r or -ia option must be specified." << std::endl;
         printHelpMenu();
-        return 1;
+        exit(1);
     }
 
     if (is_range) {
         if (ranges.empty()) {
             std::cerr << "Error: No Unicode range specified." << std::endl;
-            return 1;
+            exit(1);
         }
 
-        if (!print_numbers && !print_hex && !print_sym) {
+        if (!(print_flags & 1) && !(print_flags & 2) && !(print_flags & 4)) {
             // if none of the flags are set, print decimal and hexadecimal values by default
-            print_numbers = true;
-            print_hex = true;
+            print_flags |= 1;
+            print_flags |= 2;
         }
-
-        printUnicode(ranges, print_numbers, print_hex, print_sym, newline);
     } else {
-        if (!print_numbers && !print_hex && !print_sym) {
+        if (!(print_flags & 1) && !(print_flags & 2) && !(print_flags & 4)) {
             // if none of the flags are set, print symbols by default
-            print_sym = true;
+            print_flags |= 4;
         }
 
         if (isHex(input)) {
             std::cerr << "Error: Invalid input. The input with option -ia should be a string." << std::endl;
             printHelpMenu();
-            return 1;
+            exit(1);
         }
+    }
+}
 
-        printUnicode(input, print_numbers, print_hex, print_sym, newline);
+
+int main(int argc, char* argv[]) {
+    std::vector<std::string> ranges;
+    std::string input;
+    int print_flags = 0;
+    bool newline = false;
+    bool is_range = false;
+    bool is_input = false;
+
+    parseCommandLineArgs(argc, argv, ranges, input, print_flags, newline, is_range, is_input);
+
+    handleErrors(is_range, is_input, ranges, input, print_flags);
+
+    bool print_numbers = print_flags & 1;
+    bool print_hex = print_flags & 2;
+    bool print_sym = print_flags & 4;
+
+    std::string output;
+    if (is_range) {
+        printUnicodeRange(ranges, print_numbers, print_hex, print_sym, newline, output);
+    } else {
+        printUnicodeString(input, print_numbers, print_hex, print_sym, newline, output);
+    }
+
+    if (newline) {
+        std::cout << output;
+    } else {
+        std::stringstream ss(output);
+        std::string line;
+        while (std::getline(ss, line)) {
+            std::cout << line << " ";
+        }
+        std::cout << std::endl;
     }
 
     return 0;
-} 
+}
