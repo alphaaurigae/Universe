@@ -2,6 +2,14 @@
 
 > Universe is a command-line program that allows you to print Unicode characters and their code point values in decimal and/or hexadecimal format. You can specify Unicode ranges or a string as input.
 
+## TODO
+- punycode
+- menu / arg handling
+- input format / reading ... e.g file .. json?
+- beauty code
+- sec?
+- improve shunit?
+
 ## Usage
 
 ```
@@ -188,24 +196,30 @@ If `-ia` option is used, the input will be treated as a string instead of Unicod
 
 ## How to Build
 
-1. Clone the repository: `git clone https://github.com/kevinjl321/universe.git`
-2. Change directory: `cd universe`
-3. Build the program: `make`
-4. Run the program: `./universe [OPTIONS] -r range1 range2 ... OR -ia input`
-
+... cmake
+quick build ./build_cmake.sh and ./clean_cmake.sh
 
 ## Dependencies
 
-This program requires C++11 or later and the following standard libraries:
+Test OS ubuntu 24.04
 
-- iostream
-- string
-- vector
-- cstdlib
-- sstream
-- algorithm
-- thread
-- locale
-- codecvt
-- regex
-- unordered_map
+> libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
+
+
+## TEST
+```
+$ shunit2 unit_test/test.sh 
+/usr/bin/shunit2: 8: ./unit_test/test.sh: .....: not found
+test_print1
+test_print2
+test_print3
+test_print4
+test_print5
+test_print6
+test_print7
+test_print8
+
+Ran 8 tests.
+
+OK
+```
