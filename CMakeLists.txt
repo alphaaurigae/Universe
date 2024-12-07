@@ -30,10 +30,7 @@ if(GCC_VERSION VERSION_LESS "11.0.0")
     message(FATAL_ERROR "GCC 11.0 or higher is required, found version: ${GCC_VERSION}")
 endif()
 
-
 set(CMAKE_CXX_COMPILER ${CXX_COMPILER})
-
-
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug, Release, RelWithDebInfo, MinSizeRel)" FORCE)
@@ -112,8 +109,8 @@ endif()
 
 
 set(LIBS
-   icuuc
-   icui18n
+icuuc
+icui18n
 )
 
 set(SRC_DIR src)

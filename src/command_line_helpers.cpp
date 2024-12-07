@@ -31,7 +31,6 @@ void printHelpMenu() {
 }
 
 void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, int& print_flags, bool& newline, bool& is_range, bool& is_input) {
-    // Parse command line arguments
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "-h" || arg == "--help") {
@@ -42,18 +41,17 @@ void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& rang
             i++;
             while (i < argc && argv[i][0] != '-') {
                 std::string range = argv[i];
-                // Ensure no spaces between hex codes, so split properly or handle input as a single range
                 std::replace(range.begin(), range.end(), ' ', ',');
                 ranges.push_back(range);
                 i++;
             }
             i--;
         } else if (arg == "-d" || arg == "--dnum") {
-            print_flags |= 1; // set the first bit
+            print_flags |= 1;
         } else if (arg == "-x" || arg == "--hnum") {
-            print_flags |= 2; // set the second bit
+            print_flags |= 2;
         } else if (arg == "-s" || arg == "--symbol") {
-            print_flags |= 4; // set the third bit
+            print_flags |= 4;
         } else if (arg == "-n" || arg == "--newline") {
             newline = true;
         } else if (arg == "-ia" || arg == "--input-arg") {

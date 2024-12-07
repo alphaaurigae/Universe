@@ -2,22 +2,26 @@
 
 > Universe is a command-line program that allows you to print Unicode characters and their code point values in decimal and/or hexadecimal format. You can specify Unicode ranges or a string as input.
 
-## TODO
-- punycode
-- menu / arg handling
-- input format / reading ... e.g file .. json?
-- beauty code
-- sec?
-- improve shunit?
+
+## Build
+
+... cmake ...
+- ```./build_cmake.sh``` - build
+- ```./clean_cmake.sh``` - tidy build && dirs
+
+
+## Deps
+
+Test OS ubuntu 24.04
+
+> libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
+
 
 ## Usage
 
 ```
 ./universe [OPTIONS] -r range1 range2 ... OR -ia input
 ```
-
-### Options
-
 - `-h`, `--help`: Show help menu.
 - `-r`, `--range`: Treat input as a range of Unicode numbers.
 - `-s`, `--symbol`: Print symbol of each character.
@@ -25,8 +29,6 @@
 - `-x`, `--hnum`: Print hexadecimal code point value of each character.
 - `-n`, `--newline`: Print each output in a new line.
 - `-ia`, `--input-arg`: Treat input as a string.
-
-### Examples
 
 ```
 ./universe -s -n -r "60-90"
@@ -194,19 +196,9 @@ Note: The hexadecimal values shown in parentheses are the code point values.
 
 If `-ia` option is used, the input will be treated as a string instead of Unicode ranges.
 
-## How to Build
-
-... cmake
-quick build ./build_cmake.sh and ./clean_cmake.sh
-
-## Dependencies
-
-Test OS ubuntu 24.04
-
-> libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
 
 
-## TEST
+## Test
 ```
 $ shunit2 unit_test/test.sh 
 /usr/bin/shunit2: 8: ./unit_test/test.sh: .....: not found
@@ -223,3 +215,11 @@ Ran 8 tests.
 
 OK
 ```
+
+## Todo
+- punycode
+- menu / arg handling
+- input format / reading ... e.g file .. json?
+- beauty code
+- sec?
+- improve shunit?
