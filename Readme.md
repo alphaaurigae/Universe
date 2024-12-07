@@ -13,9 +13,9 @@
 ## Deps
 
 Test OS ubuntu 24.04
-
-> libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
-
+```
+- libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
+```
 
 ## Usage
 
