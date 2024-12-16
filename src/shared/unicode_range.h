@@ -1,19 +1,23 @@
-#include "unicode_range.h"
+#ifndef UNICODE_RANGE_H
+#define UNICODE_RANGE_H
+
+#include <unicode/unistr.h>
+#include <unicode/ustream.h>
 
 #include <iostream>
 #include <sstream>
 #include <locale>
 #include <regex>
 #include <stdexcept>
+#include <vector>
+#include <string>
 
-#include <unicode/unistr.h>
-#include <unicode/ustream.h>
 
-bool isHex(const std::string& input) {
+inline bool isHex(const std::string& input) {
     return input.substr(0, 2) == "0x" || input.substr(0, 2) == "0X";
 }
 
-void printUnicodeRange(const std::vector<std::string>& ranges, bool print_dec, bool print_hex, bool print_sym, bool newline, std::string& output) {
+inline void printUnicodeRange(const std::vector<std::string>& ranges, bool print_dec, bool print_hex, bool print_sym, bool newline, std::string& output) {
 
     for (const auto& range : ranges) {
         std::vector<std::string> subranges;
@@ -75,3 +79,5 @@ void printUnicodeRange(const std::vector<std::string>& ranges, bool print_dec, b
         }
     }
 }
+
+#endif

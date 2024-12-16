@@ -1,11 +1,13 @@
-#include "command_line_helpers.h"
+#ifndef ARGUMENT_PARSER_H
+#define ARGUMENT_PARSER_H
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
 
-void printHelpMenu() {
+inline void printHelpMenu() {
     std::cout << "Usage: ./universe [OPTIONS] -r range1 range2 ... OR -ia input\n\n"
               << "OPTIONS:\n"
               << "  -h, --help         Show help menu.\n"
@@ -16,11 +18,11 @@ void printHelpMenu() {
               << "  -n, --newline      Print each output in a new line.\n"
               << "  -ia, --input-arg   Treat input as a string.\n"
               << "EXAMPLES:\n"
-              << "./universe -s -n -r \"60-9\"\n"
-              << "./universe -s -x -n -r  \"60-90\"\n"
-              << "./universe -s -x -d -n -r 60-90\n"
-              << "./universe -s -x -d -n -r  \"0x41-0x5A\"\n"
-              << "./universe -s -n -x -ia \"foo bar barr fooo 1337\"\n"
+              << "bin/universe -s -n -r \"60-9\"\n"
+              << "bin/universe -s -x -n -r  \"60-90\"\n"
+              << "bin/universe -s -x -d -n -r 60-90\n"
+              << "bin/universe -s -x -d -n -r  \"0x41-0x5A\"\n"
+              << "bin/universe -s -n -x -ia \"foo bar barr fooo 1337\"\n"
               << "  may use \"argument\" for arguments" << std::endl
               << "  The ranges of Unicode numbers to print. Can be specified in the following formats:" << std::endl
               << "  - Single number: e.g. 65 (0x41)" << std::endl
@@ -30,7 +32,12 @@ void printHelpMenu() {
               << "If -ia option is used, the input will be treated as a string instead of Unicode ranges." << std::endl;
 }
 
-void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, int& print_flags, bool& newline, bool& is_range, bool& is_input) {
+inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, int& print_flags, bool& newline, bool& is_range, bool& is_input) {
+    if (argc == 1) {
+        printHelpMenu();
+        exit(0);
+    }
+
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
         if (arg == "-h" || arg == "--help") {
@@ -66,3 +73,5 @@ void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& rang
         }
     }
 }
+
+#endif

@@ -1,12 +1,12 @@
-#include "unicode_string.h"
+#ifndef UNICODE_STRING_H
+#define UNICODE_STRING_H
 
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-
 #include <unicode/unistr.h>
 
-void printUnicodeString(const std::string& input, bool print_dec, bool print_hex, bool print_sym, bool newline, std::string& output) {
+inline void printUnicodeString(const std::string& input, bool print_dec, bool print_hex, bool print_sym, bool newline, std::string& output) {
 
     icu::UnicodeString unicodeStr(input.c_str(), "UTF-8");
 
@@ -40,3 +40,5 @@ void printUnicodeString(const std::string& input, bool print_dec, bool print_hex
         output += "\n";
     }
 }
+
+#endif
