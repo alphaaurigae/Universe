@@ -1,20 +1,26 @@
 
 cmake_minimum_required(VERSION 3.28.3)
 
+
 set(MY_PROJECT_NAME "Universe")
 set(MY_PROJECT_BIN_NAME "universe")
 set(MY_PROJECT_VERSION "888.0")
 
+
 project(${MY_PROJECT_BIN_NAME} VERSION ${MY_PROJECT_VERSION} LANGUAGES CXX)
+
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+
 find_program(CXX_COMPILER NAMES g++-11 g++-12 g++-13 g++-14 PATHS /usr/bin /usr/local/bin)
+
 
 if(NOT CXX_COMPILER)
     message(FATAL_ERROR "GCC 11.0 or higher is required")
 endif()
+
 
 execute_process(
     COMMAND ${CXX_COMPILER} --version
@@ -23,23 +29,29 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+
 string(REGEX MATCH "([0-9]+\\.[0-9]+)" GCC_VERSION ${GCC_VERSION_OUTPUT})
+
 
 if(GCC_VERSION VERSION_LESS "11.0.0")
     message(FATAL_ERROR "GCC 11.0 or higher is required, found version: ${GCC_VERSION}")
 endif()
 
+
 set(CMAKE_CXX_COMPILER ${CXX_COMPILER})
+
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug, Release, RelWithDebInfo, MinSizeRel)" FORCE)
 endif()
+
 
 set(COMPILER_FLAGS_BASE "-Wall -Wextra -Wpedantic -fPIC -pthread")
 set(COMPILER_FLAGS_DEBUG "-O0 -g")
 set(COMPILER_FLAGS_RELEASE "-O3")
 set(COMPILER_FLAGS_RELWITHDEBINFO "-O2 -g")
 set(COMPILER_FLAGS_MINSIZEREL "-Os")
+
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS "${COMPILER_FLAGS_BASE} ${COMPILER_FLAGS_DEBUG}")
@@ -94,36 +106,50 @@ else()
 endif()
 
 
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(BUILD_DIR ${CMAKE_BINARY_DIR}/build)
+set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
+set(DATABASE_DIR ${SRC_DIR}/database)
+
+
+include_directories(
+#    /usr/include
+    ${SRC_DIR}
+    ${SRC_DIR}/shared
+    ${SRC_DIR}/universe
+)
+
+
+file(GLOB_RECURSE SRCS ${SRC_DIR}/*.cpp)  # depth 1
+# file(GLOB_RECURSE SRCS ${SRC_DIR}/**/*.cpp)  # depth 1+
+
+
+add_executable(${MY_PROJECT_BIN_NAME} ${SRCS})
+
+
 set(LIBS
 icuuc
 icui18n
 )
 
-set(SRC_DIR src)
-set(BUILD_DIR ${CMAKE_BINARY_DIR}/build)
-set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
-set(DATABASE_DIR ${SRC_DIR}/database)
 
-file(GLOB_RECURSE SRCS ${SRC_DIR}/*.cpp)  # depth 1
-# file(GLOB_RECURSE SRCS ${SRC_DIR}/**/*.cpp)  # depth 1+
+target_link_libraries(${MY_PROJECT_BIN_NAME} ${LIBS})
 
-include_directories(/usr/include ${DATABASE_DIR})
-
-add_executable(${MY_PROJECT_BIN_NAME} ${SRCS})
 
 set_target_properties(${MY_PROJECT_BIN_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR}
 )
 
-target_link_libraries(${MY_PROJECT_BIN_NAME} ${LIBS})
 
 file(MAKE_DIRECTORY ${BUILD_DIR})
 file(MAKE_DIRECTORY ${BIN_DIR})
+
 
 add_custom_target(my_clean
     COMMAND rm -rf ${BUILD_DIR} ${BIN_DIR}
     COMMENT "Clean build and bin directories"
 )
+
 
 message(STATUS "------------------------------------------------------------")
 message(STATUS "Project: ${MY_PROJECT_BIN_NAME} (Version: ${MY_PROJECT_VERSION})")

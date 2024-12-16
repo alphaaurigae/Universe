@@ -16,3 +16,4 @@ build() {
 
 configure
 build
+./shunit2_run.sh
