@@ -1,6 +1,6 @@
 # Universe
 
-> Universe is a command-line program that allows you to print Unicode characters and their code point values in decimal and/or hexadecimal format. You can specify Unicode ranges or a string as input.
+> Universe is a command-line program that output rendered Unicode symbol characters and their code point values for base-10 decimal and/or base-16 hexadecimal format. You can specify input decimal / hex ranges or utf-8 as input.
 
 
 ## Build
@@ -23,7 +23,7 @@ Test OS ubuntu 24.04
 Usage: ./universe [OPTIONS] [INPUT]\n
 -h, --help      Show help menu.\n
 Options:
--s, --symbol    Output Rendered Unicode Symbol
+-s, --symbol    Output rendered Unicode symbol
 -d, --dnum      Output the Unicode code point as a base-10 decimal integer.
 -x, --hnum      Output the Unicode code point as a base-16 hexadecimal integer, prefix '0x'.
 -n, --newline   Print each output in a new line.\n
