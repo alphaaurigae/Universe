@@ -15,34 +15,27 @@ int main(int argc, char* argv[]) {
     bool is_range = false;
     bool is_input = false;
 
-
     parseCommandLineArgs(argc, argv, ranges, input, print_flags, is_range, is_input);
 
     if (is_range && ranges.empty()) {
         std::cerr << "Error: No range provided for unicode ranges." << std::endl;
         return 1;
     }
-    
+
     if (!is_range && input.empty()) {
         std::cerr << "Error: No input string provided for unicode string." << std::endl;
         return 1;
     }
 
-    bool print_numbers = print_flags & 0x1;
-    bool print_hex = print_flags & 0x2;
-    bool print_sym = print_flags & 0x4;
-    bool newline = print_flags & 0x8;
-
     std::string output;
 
     if (is_range) {
-
-        printUnicodeRange(ranges, print_numbers, print_hex, print_sym, newline, output);
+        printUnicodeRange(ranges, print_flags, output);
     } else {
         printUnicodeString(input, print_flags, output);
     }
 
-    if (newline) {
+    if (print_flags & 0x8) { // Check if newline flag is set
         std::cout << output;
     } else {
         std::stringstream ss(output);
