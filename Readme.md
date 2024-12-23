@@ -244,8 +244,8 @@ OK
 ```
 
 ## Todo
-- punycode
-- menu / arg handling
+
+- menu / arg handling  input output
 - input format / reading ... e.g file .. json?
 - beauty code
 - sec?
