@@ -1,7 +1,6 @@
 # Universe
 
-> Universe is a command-line program that output rendered Unicode symbol characters and their code point values for base-10 decimal and/or base-16 hexadecimal format. You can specify input decimal / hex ranges or utf-8 as input.
-
+> utf-8 string or range to rendered Unicode symbol, base-10 decimal, base-16 hexadecimal
 
 ## Build
 
