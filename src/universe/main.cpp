@@ -1,5 +1,4 @@
 #include "argument_parser.h"
-
 #include "unicode_range.h"
 #include "unicode_string.h"
 
@@ -7,17 +6,17 @@
 #include <string>
 #include <vector>
 #include <sstream>
-
+#include <cstdint>
 
 int main(int argc, char* argv[]) {
     std::vector<std::string> ranges;
     std::string input;
-    int print_flags = 0;
-    bool newline = false;
+    uint8_t print_flags = 0;
     bool is_range = false;
     bool is_input = false;
 
-    parseCommandLineArgs(argc, argv, ranges, input, print_flags, newline, is_range, is_input);
+
+    parseCommandLineArgs(argc, argv, ranges, input, print_flags, is_range, is_input);
 
     if (is_range && ranges.empty()) {
         std::cerr << "Error: No range provided for unicode ranges." << std::endl;
@@ -29,15 +28,18 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    bool print_numbers = print_flags & 1;
-    bool print_hex = print_flags & 2;
-    bool print_sym = print_flags & 4;
+    bool print_numbers = print_flags & 0x1;
+    bool print_hex = print_flags & 0x2;
+    bool print_sym = print_flags & 0x4;
+    bool newline = print_flags & 0x8;
 
     std::string output;
+
     if (is_range) {
+
         printUnicodeRange(ranges, print_numbers, print_hex, print_sym, newline, output);
     } else {
-        printUnicodeString(input, print_numbers, print_hex, print_sym, newline, output);
+        printUnicodeString(input, print_flags, output);
     }
 
     if (newline) {

@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
+#include <cstdint>
 
 inline void printHelpMenu() {
     std::cout << "Usage: ./universe [OPTIONS] [INPUT]\n\n"
@@ -40,7 +41,8 @@ inline void printHelpMenu() {
               << "Comma-separated list single and range: 0x41,0x43,0x46-0x4B" << std::endl;
 }
 
-inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, int& print_flags, bool& newline, bool& is_range, bool& is_input) {
+
+inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, uint8_t& print_flags, bool& is_range, bool& is_input) {
     if (argc == 1) {
         printHelpMenu();
         exit(0);
@@ -68,7 +70,7 @@ inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string
         } else if (arg == "-s" || arg == "--symbol") {
             print_flags |= 4;
         } else if (arg == "-n" || arg == "--newline") {
-            newline = true;
+            print_flags |= 8;
         } else if (arg == "-ia" || arg == "--input-arg") {
             is_input = true;
             i++;
@@ -81,5 +83,6 @@ inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string
         }
     }
 }
+
 
 #endif
