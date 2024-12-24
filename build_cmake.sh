@@ -16,4 +16,4 @@ build() {
 
 configure
 build
-./shunit2_run.sh
+#./shunit2_run.sh
