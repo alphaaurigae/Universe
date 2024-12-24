@@ -67,7 +67,7 @@ Test OS ubuntu 24.04
 ### Sample output dated after delimiter upgrade
 - for -ia ALL CHARACTERS are input unless \ escaped.
 
-- default delimeter is space!
+- default delimiter is space!
 
 > range = symbol
 ```
@@ -96,7 +96,7 @@ bin/universe -s -x -d -n -r "0x22,0x41-0x42"
  66 0x66 B  
 
 ```
-> range single only = symbol ... new line , w.o main delimeter
+> range single only = symbol ... new line , w.o main delimiter
 ```
 bin/universe -s -n --main_delimiter_none -r "49,51,51,55"
  1 

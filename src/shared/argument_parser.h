@@ -40,6 +40,7 @@ inline void printHelpMenu() {
               << "                 - Mixed [65,0x67,70-75,0x41-0x5A]\n"
               << "-ia, --input-arg   Input as a UTF-8\n\n"
               << "Sample:\n"
+              << "./universe -s -n --main_delimiter_comma --block_delimiter_semicolon -ia \"tux\""
               << "./universe -s -n -r \"60-9\"\n"
               << "./universe -s -x -n -r  \"60-90\"\n"
               << "./universe -s -x -d -n -r 60-90\n"
