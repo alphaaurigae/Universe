@@ -1,6 +1,7 @@
 #ifndef ARGUMENT_PARSER_H
 #define ARGUMENT_PARSER_H
 
+#include "xmas.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -9,13 +10,24 @@
 #include <cstdint>
 
 inline void printHelpMenu() {
-    std::cout << "Usage: ./universe [OPTIONS] [INPUT]\n\n"
+    std::cout << "Usage: ./universe [OUPUT OPTIONS] [DELIMETER OPTIONS] [INPUT]\n\n"
               << "-h, --help      Show help menu.\n\n"
-              << "Options:\n"
+              << "Output options:\n"
               << "-s, --symbol    Output Rendered Unicode Symbol\n"
               << "-d, --dnum      Output the Unicode code point as a base-10 decimal integer.\n"
               << "-x, --hnum      Output the Unicode code point as a base-16 hexadecimal integer, prefix '0x'.\n"
               << "-n, --newline   Print each output in a new line.\n\n"
+              << "Delimeter options:\n"
+              << " to separate main output e.g 0x101,e, \n"
+              << "--main_delimiter_space   \n"
+              << "--main_delimiter_none   \n"
+              << "--main_delimiter_comma   \n"
+              << "--main_delimiter_semicolon   \n"
+              << " to separate blocks output e.g ;0x69,E,;;0x70,F,;\n"
+              << "--block_delimiter_space   \n"
+              << "--block_delimiter_space   \n"
+              << "--block_delimiter_space   \n"
+              << "--block_delimiter_space   \n"
               << "Input:\n"
               << "-r, --range     Input as a range of Unicode code points..\n"
               << "                The input can be one or more of the following formats e.g:\n"
@@ -39,10 +51,11 @@ inline void printHelpMenu() {
               << "Single: e.g. 65" << std::endl
               << "Range: e.g. 0x41-0x5A" << std::endl
               << "Comma-separated list single and range: 0x41,0x43,0x46-0x4B" << std::endl;
+
 }
 
 
-inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, uint8_t& print_flags, bool& is_range, bool& is_input) {
+inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, uint8_t& print_flags, bool& is_range, bool& is_input, char& main_delimiter, char& block_delimiter) {
     if (argc == 1) {
         printHelpMenu();
         exit(0);
@@ -77,6 +90,22 @@ inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string
             if (i < argc) {
                 input = argv[i];
             }
+        } else if (arg == "--main_delimiter_space") {
+            main_delimiter = ' ';
+        } else if (arg == "--main_delimiter_none") {
+            main_delimiter = '\0';
+        } else if (arg == "--main_delimiter_comma") {
+            main_delimiter = ',';
+        } else if (arg == "--main_delimiter_semicolon") {
+            main_delimiter = ';';
+        } else if (arg == "--block_delimiter_space") {
+            block_delimiter = ' ';
+        } else if (arg == "--block_delimiter_none") {
+            block_delimiter = '\0';
+        } else if (arg == "--block_delimiter_comma") {
+            block_delimiter = ',';
+        } else if (arg == "--block_delimiter_semicolon") {
+            block_delimiter = ';';
         } else {
             std::cerr << "Error: Invalid argument: " << arg << std::endl;
             exit(1);

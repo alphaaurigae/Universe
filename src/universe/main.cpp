@@ -14,8 +14,10 @@ int main(int argc, char* argv[]) {
     uint8_t print_flags = 0;
     bool is_range = false;
     bool is_input = false;
+    char main_delimiter = ' ';
+    char block_delimiter = ' ';
 
-    parseCommandLineArgs(argc, argv, ranges, input, print_flags, is_range, is_input);
+    parseCommandLineArgs(argc, argv, ranges, input, print_flags, is_range, is_input, main_delimiter, block_delimiter);
 
     if (is_range && ranges.empty()) {
         std::cerr << "Error: No range provided for unicode ranges." << std::endl;
@@ -30,12 +32,12 @@ int main(int argc, char* argv[]) {
     std::string output;
 
     if (is_range) {
-        printUnicodeRange(ranges, print_flags, output);
+        printUnicodeRange(ranges, print_flags, output, main_delimiter, block_delimiter);
     } else {
-        printUnicodeString(input, print_flags, output);
+        printUnicodeString(input, print_flags, output, main_delimiter, block_delimiter);
     }
 
-    if (print_flags & 0x8) { // Check if newline flag is set
+    if (print_flags & 0x8) {
         std::cout << output;
     } else {
         std::stringstream ss(output);

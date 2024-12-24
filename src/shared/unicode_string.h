@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <sstream>
 
-inline void printUnicodeString(const std::string& input, uint8_t print_flags, std::string& output) {
+inline void printUnicodeString(const std::string& input, uint8_t print_flags, std::string& output, char main_delimiter, char block_delimiter) {
     if (input.empty()) {
         return;
     }
@@ -16,46 +16,38 @@ inline void printUnicodeString(const std::string& input, uint8_t print_flags, st
         throw std::invalid_argument("Input contains invalid UTF-8 sequences.");
     }
 
-    bool print_dec = print_flags & 0x1;
-    bool print_hex = print_flags & 0x2;
-    bool print_sym = print_flags & 0x4;
-    bool newline = print_flags & 0x8;
-
     output.clear();
 
     for (int32_t i = 0; i < unicodeStr.length(); ++i) {
         UChar ch = unicodeStr[i];
-        int char_num = static_cast<int>(ch);
+        int32_t char_num = static_cast<int>(ch);
 
-        if (print_dec) {
+        output += block_delimiter;
+
+        if (print_flags & 0x1) {
             output += std::to_string(char_num);
-            if (newline) {
-                output += "\n";
-            } else {
-                output += " ";
-            }
+            output += main_delimiter;
         }
 
-        if (print_hex) {
+        if (print_flags & 0x2) {
             output += "0x" + std::to_string(char_num);
-            if (newline) {
-                output += "\n";
-            } else {
-                output += " ";
-            }
+            output += main_delimiter;
         }
 
-        if (print_sym) {
+        if (print_flags & 0x4) {
             icu::UnicodeString singleChar(ch);
             std::string utf8_str;
             singleChar.toUTF8String(utf8_str);
             output += utf8_str;
-            if (newline) {
-                output += "\n";
-            } else {
-                output += " ";
-            }
+            output += main_delimiter;
+        }
+
+        output += block_delimiter;
+
+        if (print_flags & 0x8) {
+            output += "\n";
         }
     }
 }
+
 #endif
