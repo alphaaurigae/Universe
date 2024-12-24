@@ -49,6 +49,7 @@ Test OS ubuntu 24.04
               << "                 - Mixed [65,0x67,70-75,0x41-0x5A]\n"
               << "-ia, --input-arg   Input as a UTF-8\n\n"
               << "Sample:\n"
+              << "./universe -s -n --main_delimiter_comma --block_delimiter_semicolon -ia \"tux\""
               << "./universe -s -n -r \"60-9\"\n"
               << "./universe -s -x -n -r  \"60-90\"\n"
               << "./universe -s -x -d -n -r 60-90\n"
@@ -64,166 +65,89 @@ Test OS ubuntu 24.04
 ```
 
 ### Sample output dated after delimiter upgrade
+- for -ia ALL CHARACTERS are input unless \ escaped.
+
+- default delimeter is space!
+
+> range = symbol
 ```
-./universe -s -n -r "60-90"
-< 
-= 
-> 
-? 
-@ 
-A 
-B 
-C 
-D 
-E 
-F 
-G 
-H 
-I 
-J 
-K 
-L 
-M 
-N 
-O 
-P 
-Q 
-R 
-S 
-T 
-U 
-V 
-W 
-X 
-Y 
-Z 
+bin/universe  -s -r "60-62"
+ <   =   >  
 ```
+> range = symbol .. output to new line
 ```
-./universe -s -x -n -r "60-90"
-0x3c < 
-0x3d = 
-0x3e > 
-0x3f ? 
-0x40 @ 
-0x41 A 
-0x42 B 
-0x43 C 
-0x44 D 
-0x45 E 
-0x46 F 
-0x47 G 
-0x48 H 
-0x49 I 
-0x4a J 
-0x4b K 
-0x4c L 
-0x4d M 
-0x4e N 
-0x4f O 
-0x50 P 
-0x51 Q 
-0x52 R 
-0x53 S 
-0x54 T 
-0x55 U 
-0x56 V 
-0x57 W 
-0x58 X 
-0x59 Y 
-0x5a Z 
+./universe -s -n -r "60-62"
+ <  
+ =  
+ >  
 ```
+> range = decimal, hex symbol .. output to new line
 ```
-./universe -s -x -d -n -r 60-90
-60 0x3c < 
-61 0x3d = 
-62 0x3e > 
-63 0x3f ? 
-64 0x40 @ 
-65 0x41 A 
-66 0x42 B 
-67 0x43 C 
-68 0x44 D 
-69 0x45 E 
-70 0x46 F 
-71 0x47 G 
-72 0x48 H 
-73 0x49 I 
-74 0x4a J 
-75 0x4b K 
-76 0x4c L 
-77 0x4d M 
-78 0x4e N 
-79 0x4f O 
-80 0x50 P 
-81 0x51 Q 
-82 0x52 R 
-83 0x53 S 
-84 0x54 T 
-85 0x55 U 
-86 0x56 V 
-87 0x57 W 
-88 0x58 X 
-89 0x59 Y 
-90 0x5a Z 
+bin/universe -s -x -d -n -r "60-62"
+ 60 0x60 <  
+ 61 0x61 =  
+ 62 0x62 >  
 ```
+> range with single addition = decimal, hex symbol .. output to new line
 ```
-./universe -s -x -d -n -r "0x41-0x5A"
-65 0x41 A 
-66 0x42 B 
-67 0x43 C 
-68 0x44 D 
-69 0x45 E 
-70 0x46 F 
-71 0x47 G 
-72 0x48 H 
-73 0x49 I 
-74 0x4a J 
-75 0x4b K 
-76 0x4c L 
-77 0x4d M 
-78 0x4e N 
-79 0x4f O 
-80 0x50 P 
-81 0x51 Q 
-82 0x52 R 
-83 0x53 S 
-84 0x54 T 
-85 0x55 U 
-86 0x56 V 
-87 0x57 W 
-88 0x58 X 
-89 0x59 Y 
-90 0x5a Z 
+bin/universe -s -x -d -n -r "0x22,0x41-0x42"
+ 34 0x34 "  
+ 65 0x65 A  
+ 66 0x66 B  
+
 ```
+> range single only = symbol ... new line , w.o main delimeter
 ```
- ./universe -s -n -x -ia "foo bar barr fooo 1337"
-0x66 f 
-0x6f o 
-0x6f o 
-0x20   
-0x62 b 
-0x61 a 
-0x72 r 
-0x20   
-0x62 b 
-0x61 a 
-0x72 r 
-0x72 r 
-0x20   
-0x66 f 
-0x6f o 
-0x6f o 
-0x6f o 
-0x20   
-0x31 1 
-0x33 3 
-0x33 3 
-0x37 7 
+bin/universe -s -n --main_delimiter_none -r "49,51,51,55"
+ 1 
+ 3 
+ 3 
+ 7 
 ```
+> some more variation....
 ```
-./universe -s -x -ia "foo bar barr fooo 1337"
-0x66 f 0x6f o 0x6f o 0x20   0x62 b 0x61 a 0x72 r 0x20   0x62 b 0x61 a 0x72 r 0x72 r 0x20   0x66 f 0x6f o 0x6f o 0x6f o 0x20   0x31 1 0x33 3 0x33 3 0x37 7 
+bin/universe -s -n --main_delimiter_comma --block_delimiter_semicolon -ia "tux"
+;t,;
+;u,;
+;x,;
 ```
+
+```
+bin/universe  -s -x -d   --main_delimiter_comma --block_delimiter_semicolon -ia "tux A bin A"
+;116,0x116,t,;;117,0x117,u,;;120,0x120,x,;;32,0x32, ,;;65,0x65,A,;;32,0x32, ,;;98,0x98,b,;;105,0x105,i,;;110,0x110,n,;;32,0x32, ,;;65,0x65,A,; 
+
+```
+
+```
+bin/universe  -s   --main_delimiter_none --block_delimiter_semicolon -ia "Hello Binary"
+;H;;e;;l;;l;;o;; ;;B;;i;;n;;a;;r;;y; 
+```
+
+```
+bin/universe  -s   --main_delimiter_none --block_delimiter_none -ia "cat /dev/null"
+cat /dev/null 
+```
+
+```
+bin/universe  -s   --main_delimiter_space --block_delimiter_space -ia "cat /dev/null | grep dev"
+ c   a   t       /   d   e   v   /   n   u   l   l       |       g   r   e   p       d   e   v   
+```
+
+```
+bin/universe  -d   --main_delimiter_comma --block_delimiter_space -ia "♫   "
+ 9835,  32,  32,  32, 
+```
+
+```
+ bin/universe  -d   --main_delimiter_space --block_delimiter_space -ia "\"♫  \\\\ \ \""
+ 34   9835   32   32   92   92   32   92   32   34   
+```
+
+```
+bin/universe  -d   --main_delimiter_space --block_delimiter_space -ia "\""
+ 34   
+```
+
 
 The ranges of Unicode numbers to print can be specified in the following formats:
 
@@ -237,7 +161,7 @@ If `-ia` option is used, the input will be treated as a string instead of Unicod
 
 
 
-## Test
+## Test (needs update)
 ```
 $ shunit2 unit_test/test.sh 
 /usr/bin/shunit2: 8: ./unit_test/test.sh: .....: not found
