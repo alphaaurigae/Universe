@@ -14,6 +14,9 @@
 Test OS ubuntu 24.04
 ```
 - libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
+
+experimental (optionally comment deactivate maybe)
+- nlohmann-json3-dev | https://github.com/nlohmann/json
 ```
 
 ## Usage
