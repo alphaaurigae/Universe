@@ -228,8 +228,6 @@ bin/universe -s -x -d -n --main_delimiter_comma --block_delimiter_semicolon -r "
 ;8302,0x8302,⁮,;
 ;8303,0x8303,⁯,;
 ;8304,0x8304,⁰,;
-
-
 ```
 
 The ranges of Unicode numbers to print can be specified in the following formats:
@@ -241,7 +239,6 @@ The ranges of Unicode numbers to print can be specified in the following formats
 Note: The hexadecimal values shown in parentheses are the code point values.
 
 If `-ia` option is used, the input will be treated as a string instead of Unicode ranges.
-
 
 
 ## json
@@ -258,6 +255,8 @@ If `-ia` option is used, the input will be treated as a string instead of Unicod
     }
 }
 ```
+
+
 ## Test (needs update)
 ```
 $ '/home/mmmm/Desktop/Universe/shunit2_run.sh' 
@@ -269,15 +268,15 @@ DEBUG: Got:
  <   =   >   
 test_print002
 
+
 .....
 
 
 Ran 13 tests.
 
 OK
-
-
 ```
+
 
 ## Todo
 
