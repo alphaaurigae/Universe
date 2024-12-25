@@ -6,8 +6,8 @@
 ## Build
 
 ... cmake ...
-- ```./build_cmake.sh``` - build
-- ```./clean_cmake.sh``` - tidy build && dirs
+- ```./build_cmake.sh``` - 1. Tidy build && dirs build; 2. Build; 3. Unittest shunit2
+- ```./clean_cmake.sh``` - Tidy build && dirs
 
 
 ## Deps
@@ -15,6 +15,9 @@
 Test OS ubuntu 24.04
 ```
 - libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
+
+Optional:
+- shunit2 | https://github.com/kward/shunit2
 
 // experimental (commented)
 // - nlohmann-json3-dev | https://github.com/nlohmann/json
@@ -257,27 +260,28 @@ If `-ia` option is used, the input will be treated as a string instead of Unicod
 ```
 ## Test (needs update)
 ```
-$ shunit2 unit_test/test.sh 
-/usr/bin/shunit2: 8: ./unit_test/test.sh: .....: not found
+$ '/home/mmmm/Desktop/Universe/shunit2_run.sh' 
 test_print1
-test_print2
-test_print3
-test_print4
-test_print5
-test_print6
-test_print7
-test_print8
+TEST PASSED: test_print005
+DEBUG: Expected:
+ <   =   >   
+DEBUG: Got:
+ <   =   >   
+test_print002
 
-Ran 8 tests.
+.....
+
+
+Ran 13 tests.
 
 OK
+
+
 ```
 
 ## Todo
 
-- unit tests need update!
-- menu / arg handling  input output
-- input format / reading ... e.g file .. json?
-- beauty code
-- sec?
+- Optimize output formatting?
+- Beauty code
+- Sec?
 
