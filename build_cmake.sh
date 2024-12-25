@@ -9,6 +9,7 @@ BUILD_DIR="build"
 BIN_DIR='bin'
 BIN_NAME='universe'
 
+
 configure() {
     echo -e "${BOLD}${BRIGHT_WHITE}Create build directories and config cmake${RESET}"
     mkdir -p ${BUILD_DIR}
