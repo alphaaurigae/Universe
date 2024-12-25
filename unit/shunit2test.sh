@@ -1,16 +1,17 @@
 #!/bin/bash
 
 
+BOLD='\033[1m'
+BRIGHT_WHITE='\033[1;37m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+local test_name="$1"
+local expected="$2"
+local output="$3"
+
 debug_assert_equals() {
-  local test_name="$1"
-  local expected="$2"
-  local output="$3"
-
-  # ANSI color codes
-  RED='\033[0;31m'      # Red for failed tests
-  GREEN='\033[0;32m'    # Green for passed tests
-  RESET='\033[0m'       # Reset color to default
-
   if [ "$output" != "$expected" ]; then
     echo "${RED}TEST FAILED: $test_name${RESET}"
     echo "DEBUG: Expected:"
@@ -27,7 +28,6 @@ debug_assert_equals() {
     assertEquals "Test '$test_name' passed." "$expected" "$output"
   fi
 }
-
 
 
 test_print1 () {
