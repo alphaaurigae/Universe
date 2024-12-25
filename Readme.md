@@ -164,7 +164,8 @@ If `-ia` option is used, the input will be treated as a string instead of Unicod
 
 
 
-## json experimental (// experimental (commented))
+## json
+-  (// experimental (commented))
 ```
  bin/universe -s -x -n --json  --main_delimiter_semicolon --block_delimiter_comma -ia 'Hello World'
 {
