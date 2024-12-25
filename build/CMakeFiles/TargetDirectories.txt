@@ -1,0 +1,4 @@
+/home/mmmm/Desktop/ass/Universe/build/CMakeFiles/universe.dir
+/home/mmmm/Desktop/ass/Universe/build/CMakeFiles/my_clean.dir
+/home/mmmm/Desktop/ass/Universe/build/CMakeFiles/edit_cache.dir
+/home/mmmm/Desktop/ass/Universe/build/CMakeFiles/rebuild_cache.dir

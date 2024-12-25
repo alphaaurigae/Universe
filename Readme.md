@@ -161,6 +161,19 @@ If `-ia` option is used, the input will be treated as a string instead of Unicod
 
 
 
+## json experimental
+```
+ bin/universe -s -x -n --json  --main_delimiter_semicolon --block_delimiter_comma -ia 'Hello World'
+{
+    "arguments": "-s -x -n --json --main_delimiter_semicolon --block_delimiter_comma -ia Hello World",
+    "input": "Hello World",
+    "output": {
+        "decimals": "",
+        "hexadecimals": "0x48;0x65;0x6c;0x6c;0x6f;0x20;0x57;0x6f;0x72;0x6c;0x64;",
+        "symbols": "H;e;l;l;o; ;W;o;r;l;d;"
+    }
+}
+```
 ## Test (needs update)
 ```
 $ shunit2 unit_test/test.sh 
