@@ -10,19 +10,30 @@
 
 #include <nlohmann/json.hpp>
 
-void generateJsonOutput(int argc, char* argv[], const std::string& input, uint8_t print_flags, char main_delimiter, char block_delimiter, bool is_json) {
-    nlohmann::json json_output;
+
+/*
+void generateJsonOutput(
+int argc, 
+char* argv[], 
+const std::string& input, 
+uint8_t print_flags, 
+char main_delimiter, 
+char block_delimiter
+bool is_json
+) {
+
+   nlohmann::json json_output;
 
     std::string symbols, decimals, hexadecimals;
 
     for (char c : input) {
-        if (print_flags & 0x4) {  // Symbol
+        if (print_flags & 0x4) {
             symbols += std::string(1, c) + (main_delimiter != '\0' ? std::string(1, main_delimiter) : "");
         }
-        if (print_flags & 0x1) {  // Decimal
+        if (print_flags & 0x1) {
             decimals += std::to_string(static_cast<int>(c)) + (main_delimiter != '\0' ? std::string(1, main_delimiter) : "");
         }
-        if (print_flags & 0x2) {  // Hexadecimal
+        if (print_flags & 0x2) {
             std::stringstream hex_stream;
             hex_stream << "0x" << std::hex << static_cast<int>(c);
             hexadecimals += hex_stream.str() + (main_delimiter != '\0' ? std::string(1, main_delimiter) : "");
@@ -35,7 +46,7 @@ void generateJsonOutput(int argc, char* argv[], const std::string& input, uint8_
             arguments += argv[i];
             if (i < argc - 1) arguments += " ";
         }
-
+    
         json_output["arguments"] = arguments;
         json_output["input"] = input;
         json_output["output"]["symbols"] = symbols;
@@ -44,18 +55,29 @@ void generateJsonOutput(int argc, char* argv[], const std::string& input, uint8_
         std::cout << json_output.dump(4) << std::endl;
     }
 }
-
+*/
 int main(int argc, char* argv[]) {
     std::vector<std::string> ranges;
     std::string input;
     uint8_t print_flags = 0;
     bool is_range = false;
     bool is_input = false;
-    bool is_json = false;
+    // bool is_json = false;
     char main_delimiter = ' ';
     char block_delimiter = ' ';
 
-    parseCommandLineArgs(argc, argv, ranges, input, print_flags, is_range, is_input, is_json, main_delimiter, block_delimiter);
+    parseCommandLineArgs(
+argc, 
+argv, 
+ranges, 
+input, 
+print_flags, 
+is_range, 
+is_input, 
+// is_json, 
+main_delimiter, 
+block_delimiter
+);
 
     if (is_range && ranges.empty()) {
         std::cerr << "Error: No range provided for unicode ranges." << std::endl;
@@ -75,9 +97,9 @@ int main(int argc, char* argv[]) {
         printUnicodeString(input, print_flags, output, main_delimiter, block_delimiter);
     }
 
-    if (is_json) {
-        generateJsonOutput(argc, argv, input, print_flags, main_delimiter, block_delimiter, is_json);
-    } else {
+    //if (is_json) {
+     //   generateJsonOutput(argc, argv, input, print_flags, main_delimiter, block_delimiter, is_json);
+    //} else {
         if (print_flags & 0x8) {
             std::cout << output;
         } else {
@@ -88,7 +110,7 @@ int main(int argc, char* argv[]) {
             }
             std::cout << std::endl;
         }
-    }
+    //}
 
     return 0;
 }

@@ -15,8 +15,8 @@ Test OS ubuntu 24.04
 ```
 - libicu-dev | https://github.com/unicode-org/icu | https://icu.unicode.org/
 
-experimental (optionally comment deactivate maybe)
-- nlohmann-json3-dev | https://github.com/nlohmann/json
+// experimental (commented)
+// - nlohmann-json3-dev | https://github.com/nlohmann/json
 ```
 
 ## Usage
@@ -164,7 +164,7 @@ If `-ia` option is used, the input will be treated as a string instead of Unicod
 
 
 
-## json experimental
+## json experimental (// experimental (commented))
 ```
  bin/universe -s -x -n --json  --main_delimiter_semicolon --block_delimiter_comma -ia 'Hello World'
 {

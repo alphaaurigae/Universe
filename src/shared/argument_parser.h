@@ -18,7 +18,7 @@ inline void printHelpMenu() {
               << "-x, --hnum      Unicode code point as a base-16 hexadecimal integer, prefix '0x'.\n\n"
               << "Output format (optionally):\n"
               << "-n, --newline   Each output in a new line.\n"
-              << "-j, --json      (optionally) JSON format.\n\n"
+              // << "-j, --json      (optionally) JSON format.\n\n"
               << "Delimeter options:\n"
               << " to separate main output e.g 0x101,e, \n"
               << "--main_delimiter_space   \n"
@@ -63,7 +63,18 @@ inline void printHelpMenu() {
 }
 
 
-inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string>& ranges, std::string& input, uint8_t& print_flags, bool& is_range, bool& is_input, bool& is_json, char& main_delimiter, char& block_delimiter) {
+inline void parseCommandLineArgs(
+int argc, 
+char* argv[], 
+std::vector<std::string>& ranges, 
+std::string& input, 
+uint8_t& print_flags, 
+bool& is_range, 
+bool& is_input, 
+// bool& is_json, 
+char& main_delimiter, 
+char& block_delimiter
+) {
     if (argc == 1) {
         printHelpMenu();
         exit(0);
@@ -92,8 +103,8 @@ inline void parseCommandLineArgs(int argc, char* argv[], std::vector<std::string
             print_flags |= 4;
         } else if (arg == "-n" || arg == "--newline") {
             print_flags |= 8;
-        } else if (arg == "-j" || arg == "--json") {
-            is_json = true;
+        //} else if (arg == "-j" || arg == "--json") {
+        //    is_json = true;
         } else if (arg == "-ia" || arg == "--input-arg") {
             is_input = true;
             i++;
