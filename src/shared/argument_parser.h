@@ -51,13 +51,14 @@ inline void printHelpMenu() {
               << "Single: e.g. 65\n"
               << "Range: e.g. 0x41-0x5A\n"
               << "Comma-separated list single and range: 0x41,0x43,0x46-0x4B\n\n"
-              << "For --ia \n"
+              << "Samples --ia \n"
               << "\"UTF-8 input e.g [\"input\"] \n"
-              << "Samples -ia:\n"
+              << " For -ia ALL CHARACTERS are input unless \ escaped.\n"
               << "./universe -s -n --main_delimiter_comma --block_delimiter_semicolon -ia \"tux\""
               << "./universe -s -n -x -ia \"foo bar barr fooo 1337\"\n\n"
               << "Info:\n"
-              << "\"argument\" or 'argument' or arguments as input\n";
+              << "Default delimiter is space!\n"
+              << "For -r and -ia input as \"argument\" or 'argument' or in quotes or direct e.g -ia input\n";
 
 
 }
