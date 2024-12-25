@@ -53,7 +53,7 @@ inline void printHelpMenu() {
               << "Comma-separated list single and range: 0x41,0x43,0x46-0x4B\n\n"
               << "Samples --ia \n"
               << "\"UTF-8 input e.g [\"input\"] \n"
-              << " For -ia ALL CHARACTERS are input unless \ escaped.\n"
+              << " For -ia ALL CHARACTERS are input unless \\ escaped.\n"
               << "./universe -s -n --main_delimiter_comma --block_delimiter_semicolon -ia \"tux\""
               << "./universe -s -n -x -ia \"foo bar barr fooo 1337\"\n\n"
               << "Info:\n"
