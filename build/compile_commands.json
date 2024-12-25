@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/mmmm/Desktop/ass/Universe/build",
-  "command": "/usr/bin/g++-13 -DENABLE_LOGGING -I/home/mmmm/Desktop/ass/Universe/src -I/home/mmmm/Desktop/ass/Universe/src/shared -I/home/mmmm/Desktop/ass/Universe/src/universe -Wall -Wextra -Wpedantic -fPIC -pthread -O3 -fsanitize=undefined,shift,integer-divide-by-zero,bounds,float-divide-by-zero -fsanitize=shift -fsanitize=shift-exponent -fsanitize=shift-base -fsanitize=integer-divide-by-zero -fsanitize=vla-bound   -fsanitize=null -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds -fsanitize=bounds-strict -fsanitize=alignment -fsanitize=object-size   -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool -fsanitize=enum   -fsanitize=vptr -fsanitize=pointer-overflow -fsanitize=builtin  -O3 -DNDEBUG -std=gnu++23 -o CMakeFiles/universe.dir/src/universe/main.cpp.o -c /home/mmmm/Desktop/ass/Universe/src/universe/main.cpp",
-  "file": "/home/mmmm/Desktop/ass/Universe/src/universe/main.cpp",
-  "output": "CMakeFiles/universe.dir/src/universe/main.cpp.o"
-}
-]
