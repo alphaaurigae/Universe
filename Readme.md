@@ -34,7 +34,7 @@ E.g:
 bin/universe  -s -r '60-62'
  <   =   >  
 ```
-- SEE unit/shunit2test.sh ; src/shared/argument_parser.h
+- See unit/shunit2test.sh ; src/shared/argument_parser.h
 
 
 The ranges of Unicode numbers to print can be specified in the following formats:
@@ -77,21 +77,35 @@ bin/universe -s   --main_delimiter_comma --block_delimiter_none -r "0x00A2-0x00A
 ```
 
 
-## Test (needs update)
+## Test
+
+- Manually set unit tests.
+- May check for wrong expect, looks good tho.
+
 ```
 $ '/home/mmmm/Desktop/Universe/shunit2_run.sh' 
-test_print1
-TEST PASSED: test_print005
+test_print001
+TEST test_print001 PASSED: 
 DEBUG: Expected:
  <   =   >   
 DEBUG: Got:
  <   =   >   
-test_print002
 
-.....
+......
 
+TEST test_print014 PASSED: 
+DEBUG: Expected:
+;226,0xc3/0xa2,0x00e2,0x000000e2,â,;
+;225,0xc3/0xa1,0x00e1,0x000000e1,á,;
+;8308,0xe2/0x81/0xb4,0x2074,0x00002074,⁴,;
+;8309,0xe2/0x81/0xb5,0x2075,0x00002075,⁵,;
+DEBUG: Got:
+;226,0xc3/0xa2,0x00e2,0x000000e2,â,;
+;225,0xc3/0xa1,0x00e1,0x000000e1,á,;
+;8308,0xe2/0x81/0xb4,0x2074,0x00002074,⁴,;
+;8309,0xe2/0x81/0xb5,0x2075,0x00002075,⁵,;
 
-Ran 13 tests.
+Ran 14 tests.
 
 OK
 ```
@@ -105,3 +119,4 @@ OK
 - Beauty code
 - Sec?
 - Range input for multi singles, currently not workign for range input e.g "0xc3/0xa2-0xc3/0xa9" ?
+- May rename "unicode_range.h" "unicode_string.h" and functions to better fit description?

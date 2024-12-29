@@ -30,8 +30,8 @@ debug_assert_equals() {
 }
 
 
-test_print1 () {
-  test="test_print1"
+test_print001 () {
+  test="test_print001"
   output=$(bin/universe  -s -r '60-62')
   expected=" <   =   >   "
   debug_assert_equals "test_print1" "$expected" "$output"
