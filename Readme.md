@@ -47,6 +47,20 @@ The ranges of Unicode numbers to print can be specified in the following formats
 If `-ia` option is used, the input will be treated as a string instead of Unicode ranges.
 
 
+# Resources:
+`https://www.unicode.org/Public/UCD/latest/ucd/`
+
+- "left column" directory files e.g 0024 ; PR # Sc DOLLAR SIGN --> [0024] = $
+```
+bin/universe -s  --main_delimiter_none --block_delimiter_none -r "0x0024"
+$ 
+```
+```
+bin/universe -s   --main_delimiter_comma --block_delimiter_none -r "0x00A2-0x00A5"
+¢,£,¤,¥, 
+```
+
+
 ## Json
 -  (// experimental (commented))
 ```
