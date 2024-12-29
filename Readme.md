@@ -47,7 +47,7 @@ The ranges of Unicode numbers to print can be specified in the following formats
 If `-ia` option is used, the input will be treated as a string instead of Unicode ranges.
 
 
-# Resources:
+## Resources:
 `https://www.unicode.org/Public/UCD/latest/ucd/`
 
 - "left column" directory files e.g 0024 ; PR # Sc DOLLAR SIGN --> [0024] = $
