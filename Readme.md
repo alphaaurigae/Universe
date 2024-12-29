@@ -1,6 +1,6 @@
 # Universe
 
-> string or range to rendered Unicode symbol, decimal, hexadecimal utf-8, utf-16, utf-32 [0x41] [0xe2/0x81/0xb5] [0x2074] [0x000000e2]
+> String or range to rendered Unicode symbol, decimal, hexadecimal utf-8, utf-16, utf-32 [0x41] [0xe2/0x81/0xb5] [0x2074] [0x000000e2]
 
 
 ## Build
@@ -26,31 +26,28 @@ Optional:
 
 ## Usage
 
-- see src/shared/argument_parser.h or bin/universe -h
+- See src/shared/argument_parser.h or bin/universe -h
 
-
-### Some possible variations:
-
-e.g 
-> range = symbol
+E.g:
+> Range = symbol
 ```
 bin/universe  -s -r '60-62'
  <   =   >  
 ```
 - SEE unit/shunit2test.sh ; src/shared/argument_parser.h
 
+
 The ranges of Unicode numbers to print can be specified in the following formats:
 
-- Single number: e.g. 65 (0x41)
-- Range of numbers: e.g. 65-90 (0x41-0x5A)
-- Comma-separated list of numbers and/or ranges: e.g. 65,67,70-75 (0x41,0x43,0x46-0x4B)
+- Single dec or hex: e.g. 65 [0x41] [0xe2/0x81/0xb5]
+- Range of numbers: e.g. 65-90 [0x41-0x43]
+- Comma-separated list of numbers and/or ranges: e.g. [65,67,70-75] [0x41,0x43,0x46-0x4B]
 
-Note: The hexadecimal values shown in parentheses are the code point values.
 
 If `-ia` option is used, the input will be treated as a string instead of Unicode ranges.
 
 
-## json
+## Json
 -  (// experimental (commented))
 ```
  bin/universe -s -x -n --json  --main_delimiter_semicolon --block_delimiter_comma -ia 'Hello World'
@@ -88,7 +85,9 @@ OK
 
 ## Todo
 
+- Add input/output format variations?
+- decimal output check
 - Optimize output formatting?
 - Beauty code
 - Sec?
-
+- Range input for multi singles, currently not workign for range input e.g "0xc3/0xa2-0xc3/0xa9" ?
