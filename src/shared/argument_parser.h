@@ -1,7 +1,8 @@
+
 #ifndef ARGUMENT_PARSER_H
 #define ARGUMENT_PARSER_H
 
-
+#include <bitset>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,8 +15,10 @@ inline void printHelpMenu() {
               << "-h, --help      Show help menu.\n\n"
               << "Output print:\n"
               << "-s, --symbol    Unicode rendered Symbol\n"
-              << "-d, --dnum      Unicode code point as a base-10 decimal integer.\n"
-              << "-x, --hnum      Unicode code point as a base-16 hexadecimal integer, prefix '0x'.\n\n"
+              << "-d, --dnum      Unicode decimal.\n"
+              << "-x, --utf8      Unicode utf-8 hexadecimal, prefix '0x'.\n"
+              << "-t, --utf16     Unicode utf-16 hexadecimal, prefix '0x'.\n"
+              << "-u, --utf32     Unicode utf-32 hexadecimal, prefix '0x'.\n\n"
               << "Output format (optionally):\n"
               << "-n, --newline   Each output in a new line.\n"
               // << "-j, --json      (optionally) JSON format.\n\n"
@@ -35,10 +38,10 @@ inline void printHelpMenu() {
               << "-ia, --input-arg   Input as a UTF-8\n\n"
               << "The input can be one or more of the following formats:\n"
               << "For -r \n"
-              << "1. Single base-10 (decimal) integer code point [65]\n"
-              << "2. Single base-16 (hexadecimal) integer code point [0x41]\n"
+              << "1. Single (decimal) [65]\n"
+              << "2. Single (hexadecimal) [0x41] [0xe2/0x81/0xb5] [0x2074] [0x000000e2] , \n"
               << "3. Range of decimal code points [60-90]\n"
-              << "4. Range of hexadecimal code points [0x41-0x5A]\n"
+              << "4. Range of hexadecimal [0x41-0x5A]\n"
               << "5. Comma-separated list of decimal code points and/or ranges [65,70-75]\n"
               << "6. Comma-separated list of hexadecimal code points and/or ranges [0x41,0x46-0x4B]\n"
               << "7. Mixed [65,0x67,70-75,0x41-0x5A]\n"
@@ -59,22 +62,19 @@ inline void printHelpMenu() {
               << "Info:\n"
               << "Default delimiter is space!\n"
               << "For -r and -ia input as \"argument\" or 'argument' or in quotes or direct e.g -ia input\n";
-
-
 }
 
 
 inline void parseCommandLineArgs(
-int argc, 
-char* argv[], 
-std::vector<std::string>& ranges, 
-std::string& input, 
-uint8_t& print_flags, 
-bool& is_range, 
-bool& is_input, 
-// bool& is_json, 
-char& main_delimiter, 
-char& block_delimiter
+    int argc,
+    char* argv[],
+    std::vector<std::string>& ranges,
+    std::string& input,
+    std::bitset<8>& print_flags,
+    bool& is_range,
+    bool& is_input,
+    char& main_delimiter,
+    char& block_delimiter
 ) {
     if (argc == 1) {
         printHelpMenu();
@@ -97,15 +97,17 @@ char& block_delimiter
             }
             i--;
         } else if (arg == "-d" || arg == "--dnum") {
-            print_flags |= 1;
-        } else if (arg == "-x" || arg == "--hnum") {
-            print_flags |= 2;
+            print_flags.set(0);
+        } else if (arg == "-x" || arg == "--utf8") {
+            print_flags.set(1);
+        } else if (arg == "-t" || arg == "--utf16") {
+            print_flags.set(4);
+        } else if (arg == "-u" || arg == "--utf32") {
+            print_flags.set(5);
         } else if (arg == "-s" || arg == "--symbol") {
-            print_flags |= 4;
+            print_flags.set(2);
         } else if (arg == "-n" || arg == "--newline") {
-            print_flags |= 8;
-        //} else if (arg == "-j" || arg == "--json") {
-        //    is_json = true;
+            print_flags.set(3);
         } else if (arg == "-ia" || arg == "--input-arg") {
             is_input = true;
             i++;
@@ -134,6 +136,5 @@ char& block_delimiter
         }
     }
 }
-
 
 #endif

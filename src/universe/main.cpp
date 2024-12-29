@@ -59,25 +59,13 @@ bool is_json
 int main(int argc, char* argv[]) {
     std::vector<std::string> ranges;
     std::string input;
-    uint8_t print_flags = 0;
+    std::bitset<8> print_flags;
     bool is_range = false;
     bool is_input = false;
-    // bool is_json = false;
     char main_delimiter = ' ';
     char block_delimiter = ' ';
 
-    parseCommandLineArgs(
-argc, 
-argv, 
-ranges, 
-input, 
-print_flags, 
-is_range, 
-is_input, 
-// is_json, 
-main_delimiter, 
-block_delimiter
-);
+    parseCommandLineArgs(argc, argv, ranges, input, print_flags, is_range, is_input, main_delimiter, block_delimiter);
 
     if (is_range && ranges.empty()) {
         std::cerr << "Error: No range provided for unicode ranges." << std::endl;
@@ -97,20 +85,16 @@ block_delimiter
         printUnicodeString(input, print_flags, output, main_delimiter, block_delimiter);
     }
 
-    //if (is_json) {
-     //   generateJsonOutput(argc, argv, input, print_flags, main_delimiter, block_delimiter, is_json);
-    //} else {
-        if (print_flags & 0x8) {
-            std::cout << output;
-        } else {
-            std::stringstream ss(output);
-            std::string line;
-            while (std::getline(ss, line)) {
-                std::cout << line << " ";
-            }
-            std::cout << std::endl;
+    if (print_flags.test(3)) {
+        std::cout << output;
+    } else {
+        std::stringstream ss(output);
+        std::string line;
+        while (std::getline(ss, line)) {
+            std::cout << line << " ";
         }
-    //}
+        std::cout << std::endl;
+    }
 
     return 0;
 }

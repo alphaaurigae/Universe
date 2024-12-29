@@ -4,8 +4,12 @@
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <iomanip>
+#include <bitset>
 
-inline void printUnicodeString(const std::string& input, uint8_t print_flags, std::string& output, char main_delimiter, char block_delimiter) {
+#include "format_unicode_char.h"
+
+inline void printUnicodeString(const std::string& input, const std::bitset<8>& print_flags, std::string& output, char main_delimiter, char block_delimiter) {
     if (input.empty()) {
         return;
     }
@@ -18,36 +22,25 @@ inline void printUnicodeString(const std::string& input, uint8_t print_flags, st
 
     output.clear();
 
-    for (int32_t i = 0; i < unicodeStr.length(); ++i) {
-        UChar ch = unicodeStr[i];
-        int32_t char_num = static_cast<int>(ch);
+for (int32_t i = 0; i < unicodeStr.length();) {
+    UChar32 ch;
+    int32_t prevIndex = i;
+    U16_NEXT(unicodeStr.getBuffer(), i, unicodeStr.length(), ch);
 
-        output += block_delimiter;
-
-        if (print_flags & 0x1) {
-            output += std::to_string(char_num);
-            output += main_delimiter;
-        }
-
-        if (print_flags & 0x2) {
-            output += "0x" + std::to_string(char_num);
-            output += main_delimiter;
-        }
-
-        if (print_flags & 0x4) {
-            icu::UnicodeString singleChar(ch);
-            std::string utf8_str;
-            singleChar.toUTF8String(utf8_str);
-            output += utf8_str;
-            output += main_delimiter;
-        }
-
-        output += block_delimiter;
-
-        if (print_flags & 0x8) {
-            output += "\n";
-        }
+    if (i == prevIndex) {
+        throw std::runtime_error("Infinite loop detected in U16_NEXT processing.");
     }
+
+    output += block_delimiter;
+
+    formatUnicodeChar(ch, print_flags, output, main_delimiter);
+
+    output += block_delimiter;
+
+    if (print_flags.test(3)) {
+        output += "\n";
+    }
+}
 }
 
 #endif

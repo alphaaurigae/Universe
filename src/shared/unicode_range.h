@@ -4,6 +4,7 @@
 #include <unicode/unistr.h>
 #include <unicode/ustream.h>
 
+#include <bitset>
 #include <iostream>
 #include <sstream>
 #include <locale>
@@ -11,12 +12,16 @@
 #include <stdexcept>
 #include <vector>
 #include <string>
+#include <iomanip>
+
+#include "format_unicode_char.h"
+
 
 inline bool isHex(const std::string& input) {
     return input.substr(0, 2) == "0x" || input.substr(0, 2) == "0X";
 }
 
-inline void printUnicodeRange(const std::vector<std::string>& ranges, uint8_t print_flags, std::string& output, char main_delimiter, char block_delimiter) {
+inline void printUnicodeRange(const std::vector<std::string>& ranges, std::bitset<8>& print_flags, std::string& output, char main_delimiter, char block_delimiter) {
     output.clear();
 
     for (const auto& range : ranges) {
@@ -50,24 +55,11 @@ inline void printUnicodeRange(const std::vector<std::string>& ranges, uint8_t pr
                 for (int32_t char_num = start_num; char_num <= end_num; char_num++) {
                     output += block_delimiter;
 
-                    if (print_flags & 0x1) {
-                        output += std::to_string(char_num);
-                        output += main_delimiter;
-                    }
-                    if (print_flags & 0x2) {
-                        output += "0x" + std::to_string(char_num);
-                        output += main_delimiter;
-                    }
-                    if (print_flags & 0x4) {
-                        icu::UnicodeString unicodeChar(static_cast<UChar>(char_num));
-                        std::string utf8_str;
-                        unicodeChar.toUTF8String(utf8_str);
-                        output += utf8_str;
-                        output += main_delimiter;
-                    }
+                    formatUnicodeChar(char_num, print_flags, output, main_delimiter);
 
                     output += block_delimiter;
-                    if (print_flags & 0x8) {
+
+                    if (print_flags.test(3)) {
                         output += "\n";
                     }
                 }
