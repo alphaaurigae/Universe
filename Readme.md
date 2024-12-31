@@ -6,6 +6,7 @@
 ## Build
 
 ... cmake ...
+- g++ && clang option (cmake default)(CMakeLists.txt)(USE_CLANG "Use Clang as the compiler" ON) (ON = clang - OFF = g++
 - ```./build_cmake.sh``` - 1. Tidy build && dirs build; 2. Build; 3. Unittest shunit2
 - ```./clean_cmake.sh``` - Tidy build && dirs
 
@@ -120,3 +121,4 @@ OK
 - Sec?
 - Range input for multi singles, currently not workign for range input e.g "0xc3/0xa2-0xc3/0xa9" ?
 - May rename "unicode_range.h" "unicode_string.h" and functions to better fit description?
+

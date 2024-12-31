@@ -1,42 +1,64 @@
-# Single bin template
-
-
 cmake_minimum_required(VERSION 3.28.3)
-
 
 set(MY_PROJECT_NAME "Universe")
 set(MY_PROJECT_BIN_NAME "universe")
 set(MY_PROJECT_VERSION "888.0")
 
-
 project(${MY_PROJECT_BIN_NAME} VERSION ${MY_PROJECT_VERSION} LANGUAGES CXX)
-
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
-find_program(CXX_COMPILER NAMES g++-11 g++-12 g++-13 g++-14 PATHS /usr/bin /usr/local/bin)
+option(USE_CLANG "Use Clang as the compiler" ON)
+
+if(USE_CLANG)
+    find_program(CXX_COMPILER NAMES clang++-14 clang++-15 clang++-16 clang++-17 clang++-18 PATHS /usr/bin /usr/local/bin)
+else()
+    find_program(CXX_COMPILER NAMES g++-11 g++-12 g++-13 g++-14 PATHS /usr/bin /usr/local/bin)
+endif()
 
 
 if(NOT CXX_COMPILER)
-    message(FATAL_ERROR "GCC 11.0 or higher is required")
+    message(FATAL_ERROR "Compiler not found! Please install Clang > 14 or GCC > 11.0 or higher.")
 endif()
 
 
 execute_process(
     COMMAND ${CXX_COMPILER} --version
-    OUTPUT_VARIABLE GCC_VERSION_OUTPUT
+    OUTPUT_VARIABLE COMPILER_VERSION_OUTPUT
     ERROR_QUIET
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 
-string(REGEX MATCH "([0-9]+\\.[0-9]+)" GCC_VERSION ${GCC_VERSION_OUTPUT})
+string(REGEX MATCH "([0-9]+\\.[0-9]+)" COMPILER_VERSION ${COMPILER_VERSION_OUTPUT})
 
 
-if(GCC_VERSION VERSION_LESS "11.0.0")
-    message(FATAL_ERROR "GCC 11.0 or higher is required, found version: ${GCC_VERSION}")
+if(USE_CLANG)
+    if(COMPILER_VERSION VERSION_LESS "14.0.0")
+        message(FATAL_ERROR "Compiler version Clang >= 14.0.0 is required, found version: ${COMPILER_VERSION}")
+    endif()
+else()
+    if(COMPILER_VERSION VERSION_LESS "11.0.0")
+        message(FATAL_ERROR "Compiler version GCC >= 11.0.0 is required, found version: ${COMPILER_VERSION}")
+    endif()
+endif()
+
+execute_process(
+    COMMAND ${CXX_COMPILER} -v
+    OUTPUT_VARIABLE COMPILER_OUTPUT
+    ERROR_VARIABLE COMPILER_OUTPUT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+
+if(COMPILER_OUTPUT MATCHES "clang")
+    set(CMAKE_CXX_COMPILER_ID "Clang")
+elseif(COMPILER_OUTPUT MATCHES "gcc")
+    set(CMAKE_CXX_COMPILER_ID "GNU")
+else()
+    message(FATAL_ERROR "Unknown compiler detected in: ${COMPILER_OUTPUT}")
 endif()
 
 
@@ -72,15 +94,25 @@ if(ENABLE_DEPENDENCY_GENERATION)
 endif()
 
 
+# Sanitizer flags - generalized, needs update, maybe
 option(ENABLE_SANITIZERS "Enable sanitizer compile flags for runtime debugging" ON)
 if(ENABLE_SANITIZERS)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(SANITIZER_FLAGS "-fsanitize=undefined,shift,integer-divide-by-zero,bounds,float-divide-by-zero -fsanitize=shift -fsanitize=shift-exponent -fsanitize=shift-base -fsanitize=integer-divide-by-zero -fsanitize=vla-bound \
+  -fsanitize=null -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds -fsanitize=bounds -fsanitize=alignment -fsanitize=object-size \
+  -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool -fsanitize=enum \
+  -fsanitize=vptr -fsanitize=pointer-overflow -fsanitize=builtin -fsanitize=address -fsanitize=leak -fsanitize=pointer-compare -fsanitize=shadow-call-stack  \
+  -fno-sanitize-address-globals-dead-stripping -fno-sanitize-address-outline-instrumentation -fno-sanitize-address-poison-custom-array-cookie -fno-sanitize-address-use-after-scope \
+  -fno-sanitize-address-use-odr-indicator -fno-sanitize-cfi-cross-dso  ") # -fsanitize=memory -fsanitize=thread )
+
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(SANITIZER_FLAGS "-fsanitize=undefined,shift,integer-divide-by-zero,bounds,float-divide-by-zero -fsanitize=shift -fsanitize=shift-exponent -fsanitize=shift-base -fsanitize=integer-divide-by-zero -fsanitize=vla-bound \
   -fsanitize=null -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds -fsanitize=bounds-strict -fsanitize=alignment -fsanitize=object-size \
   -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool -fsanitize=enum \
-  -fsanitize=vptr -fsanitize=pointer-overflow -fsanitize=builtin ") # -fsanitize=thread  -fsanitize=leak -fsanitize=pointer-compare  -fsanitize=address
+  -fsanitize=vptr -fsanitize=pointer-overflow -fsanitize=builtin -fsanitize=address -Wno-maybe-uninitialized -fsanitize=leak -fsanitize=pointer-compare ") # -fsanitize=thread )
+    endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SANITIZER_FLAGS}")
 endif()
-
 
 option(ENABLE_COMPILE_COMMANDS "Enable generation of compile_commands.json" ON)
 if(ENABLE_COMPILE_COMMANDS)
