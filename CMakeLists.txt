@@ -1,3 +1,6 @@
+# Single bin template
+
+# Main --------------------------------------------------------------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.28.3)
 
 set(MY_PROJECT_NAME "Universe")
@@ -10,7 +13,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
-option(USE_CLANG "Use Clang as the compiler" ON)
+# Compiler choice ---------------------------------------------------------------------------------------------------------------------------
+option(USE_CLANG "Clang as compiler instead of g++" ON)
 
 if(USE_CLANG)
     find_program(CXX_COMPILER NAMES clang++-14 clang++-15 clang++-16 clang++-17 clang++-18 PATHS /usr/bin /usr/local/bin)
@@ -45,6 +49,7 @@ else()
     endif()
 endif()
 
+
 execute_process(
     COMMAND ${CXX_COMPILER} -v
     OUTPUT_VARIABLE COMPILER_OUTPUT
@@ -65,6 +70,7 @@ endif()
 set(CMAKE_CXX_COMPILER ${CXX_COMPILER})
 
 
+# Compiler flags main -----------------------------------------------------------------------------------------------------------------------
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug, Release, RelWithDebInfo, MinSizeRel)" FORCE)
 endif()
@@ -88,31 +94,76 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
 endif()
 
 
+# Compiler flags ON/OFF ---------------------------------------------------------------------------------------------------------------------
 option(ENABLE_DEPENDENCY_GENERATION "Enable dependency generation compile flags" OFF)
 if(ENABLE_DEPENDENCY_GENERATION)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -MMD -MP")
 endif()
 
-
-# Sanitizer flags - generalized, needs update, maybe
+## generalized, needs update, maybe
 option(ENABLE_SANITIZERS "Enable sanitizer compile flags for runtime debugging" ON)
+# man gcc | grep -A 10 'sanitize'
+# clang --help | grep -A 10 'sanitize'
 if(ENABLE_SANITIZERS)
+    set(COMMON_SANITIZERS
+        "undefined"
+        "shift"
+        "shift-exponent"
+        "shift-base"
+        "integer-divide-by-zero"
+        "vla-bound"
+        "null"
+        "return"
+        "signed-integer-overflow"
+        "bounds"
+        "alignment"
+        "object-size"
+        "float-divide-by-zero"
+        "float-cast-overflow"
+        "nonnull-attribute"
+        "returns-nonnull-attribute"
+        "bool"
+        "enum"
+        "vptr"
+        "pointer-overflow"
+        "builtin"
+        "address"
+        "leak"
+        "pointer-compare"
+    )
+
+    set(SANITIZER_FLAGS "")
+    foreach(SANITIZER ${COMMON_SANITIZERS})
+        list(APPEND SANITIZER_FLAGS "-fsanitize=${SANITIZER}")
+    endforeach()
+
     if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        set(SANITIZER_FLAGS "-fsanitize=undefined,shift,integer-divide-by-zero,bounds,float-divide-by-zero -fsanitize=shift -fsanitize=shift-exponent -fsanitize=shift-base -fsanitize=integer-divide-by-zero -fsanitize=vla-bound \
-  -fsanitize=null -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds -fsanitize=bounds -fsanitize=alignment -fsanitize=object-size \
-  -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool -fsanitize=enum \
-  -fsanitize=vptr -fsanitize=pointer-overflow -fsanitize=builtin -fsanitize=address -fsanitize=leak -fsanitize=pointer-compare -fsanitize=shadow-call-stack  \
-  -fno-sanitize-address-globals-dead-stripping -fno-sanitize-address-outline-instrumentation -fno-sanitize-address-poison-custom-array-cookie -fno-sanitize-address-use-after-scope \
-  -fno-sanitize-address-use-odr-indicator -fno-sanitize-cfi-cross-dso  ") # -fsanitize=memory -fsanitize=thread )
+        list(APPEND SANITIZER_FLAGS
+            "-fsanitize=shadow-call-stack"
+            "-fno-sanitize-address-globals-dead-stripping"
+            "-fno-sanitize-address-outline-instrumentation"
+            "-fno-sanitize-address-poison-custom-array-cookie"
+            "-fno-sanitize-address-use-after-scope"
+            "-fno-sanitize-address-use-odr-indicator"
+            "-fno-sanitize-cfi-cross-dso"
+        )
 
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(SANITIZER_FLAGS "-fsanitize=undefined,shift,integer-divide-by-zero,bounds,float-divide-by-zero -fsanitize=shift -fsanitize=shift-exponent -fsanitize=shift-base -fsanitize=integer-divide-by-zero -fsanitize=vla-bound \
-  -fsanitize=null -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds -fsanitize=bounds-strict -fsanitize=alignment -fsanitize=object-size \
-  -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute -fsanitize=bool -fsanitize=enum \
-  -fsanitize=vptr -fsanitize=pointer-overflow -fsanitize=builtin -fsanitize=address -Wno-maybe-uninitialized -fsanitize=leak -fsanitize=pointer-compare ") # -fsanitize=thread )
+        list(APPEND SANITIZER_FLAGS
+            #"-fsanitize=kernel-address"
+            "-fno-sanitize-address-use-after-scope"
+            #"-fsanitize-address-use-odr-indicator"
+            "-Wno-maybe-uninitialized"  # as, clang ignoring the warnings.
+            "-fsanitize=leak"
+            "-fsanitize=bounds-strict"
+            "-fsanitize=pointer-compare"
+        )
     endif()
+
+    string(REPLACE ";" " " SANITIZER_FLAGS "${SANITIZER_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SANITIZER_FLAGS}")
 endif()
+
 
 option(ENABLE_COMPILE_COMMANDS "Enable generation of compile_commands.json" ON)
 if(ENABLE_COMPILE_COMMANDS)
@@ -140,6 +191,7 @@ else()
 endif()
 
 
+# Directories -------------------------------------------------------------------------------------------------------------------------------
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(BUILD_DIR ${CMAKE_BINARY_DIR}/build)
 set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
@@ -149,7 +201,7 @@ include_directories(
 #    /usr/include
     ${SRC_DIR}
     ${SRC_DIR}/shared
-    ${SRC_DIR}/universe
+    ${SRC_DIR}/${MY_PROJECT_BIN_NAME}
 )
 
 
@@ -157,12 +209,15 @@ file(GLOB_RECURSE SRCS ${SRC_DIR}/*.cpp)  # depth 1
 # file(GLOB_RECURSE SRCS ${SRC_DIR}/**/*.cpp)  # depth 1+
 
 
+# Build -------------------------------------------------------------------------------------------------------------------------------------
 set(LIBS_MAIN
 icuuc
 icui18n
 )
 
+
 add_executable(${MY_PROJECT_BIN_NAME} ${SRCS})
+
 
 target_link_libraries(${MY_PROJECT_BIN_NAME} ${LIBS_MAIN})
 
@@ -176,12 +231,14 @@ file(MAKE_DIRECTORY ${BUILD_DIR})
 file(MAKE_DIRECTORY ${BIN_DIR})
 
 
+# Clean -------------------------------------------------------------------------------------------------------------------------------------
 add_custom_target(my_clean
     COMMAND rm -rf ${BUILD_DIR} ${BIN_DIR}
     COMMENT "Clean build and bin directories"
 )
 
 
+# Print settings info (before build) --------------------------------------------------------------------------------------------------------
 message(STATUS "------------------------------------------------------------")
 message(STATUS "Project: ${MY_PROJECT_BIN_NAME} (Version: ${MY_PROJECT_VERSION})")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
